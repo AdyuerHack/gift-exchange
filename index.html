@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercambio de Regalos Familiar 🎁</title>
+    <meta name="description" content="Generador aleatorio de amigo invisible para intercambio de regalos familiares">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🎄 Intercambio de Regalos Familiar 🎁</h1>
+            <p class="subtitle">Amigo Invisible Secreto</p>
+        </header>
+
+        <!-- PANTALLA DE LOGIN -->
+        <div class="card" id="loginView">
+            <div class="section">
+                <h2>🔐 Iniciar Sesión</h2>
+                <p class="description">Selecciona cómo deseas acceder:</p>
+
+                <div class="login-options">
+                    <button id="adminLoginBtn" class="btn btn-admin-login">
+                        <span>👨‍💼</span> Soy Administrador
+                    </button>
+                    <button id="memberLoginBtn" class="btn btn-member-login">
+                        <span>🎁</span> Soy Miembro de la Familia
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Password Input -->
+            <div class="section" id="adminPasswordSection" style="display: none;">
+                <h3>Contraseña de Administrador</h3>
+                <div class="input-group">
+                    <input type="password" id="adminPasswordInput" placeholder="Ingresa la contraseña..."
+                        autocomplete="off">
+                    <button id="loginSubmitBtn" class="btn btn-primary">
+                        <span>✓</span> Entrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Member Name Selection -->
+            <div class="section" id="memberNameSection" style="display: none;">
+                <h3>Selecciona tu Nombre</h3>
+                <div class="select-group">
+                    <select id="loginMemberSelect" class="member-select">
+                        <option value="">-- Selecciona tu nombre --</option>
+                    </select>
+                </div>
+                <button id="memberLoginSubmitBtn" class="btn btn-reveal" disabled>
+                    <span>→</span> Continuar
+                </button>
+            </div>
+        </div>
+
+        <!-- Logout Button (shown when logged in) -->
+        <div class="logout-section" id="logoutSection" style="display: none;">
+            <button id="logoutBtn" class="btn-logout">
+                <span>⬅</span> Volver a Login
+            </button>
+        </div>
+
+        <!-- VISTA ADMINISTRADOR -->
+        <div class="card" id="adminView">
+            <div class="section">
+                <h2>👨‍👩‍👧‍👦 Miembros de la Familia</h2>
+                <div class="input-group">
+                    <input type="text" id="memberInput" placeholder="Nombre del familiar..." autocomplete="off">
+                    <button id="addButton" class="btn btn-primary">
+                        <span>➕</span> Agregar
+                    </button>
+                </div>
+
+                <div id="membersList" class="members-list"></div>
+            </div>
+
+            <div class="section" id="passwordChangeSection">
+                <h2>🔑 Cambiar Contraseña de Admin</h2>
+                <div class="input-group">
+                    <input type="password" id="newPasswordInput" placeholder="Nueva contraseña..." autocomplete="off">
+                    <button id="changePasswordBtn" class="btn btn-primary">
+                        <span>🔒</span> Cambiar
+                    </button>
+                </div>
+            </div>
+
+            <div class="section" id="actionSection" style="display: none;">
+                <button id="generateButton" class="btn btn-generate">
+                    <span>🎲</span> Generar Asignaciones Secretas
+                </button>
+                <p class="info-text">
+                    ⚠️ Las asignaciones se generarán de forma secreta. Cada miembro podrá ver SOLO su propia asignación.
+                </p>
+            </div>
+
+            <div class="section" id="statusSection" style="display: none;">
+                <div class="status-card">
+                    <h3>✅ Asignaciones Generadas</h3>
+                    <p>Las asignaciones han sido creadas exitosamente. Ahora cada miembro puede entrar a la aplicación
+                        para ver a quién le toca regalarle.</p>
+                    <div id="revealStatus" class="reveal-status"></div>
+                    <button id="resetButton" class="btn btn-danger">
+                        <span>🔄</span> Reiniciar Todo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA MIEMBRO -->
+        <div class="card" id="memberView" style="display: none;">
+            <div class="section">
+                <h2>🎁 Descubre tu Asignación</h2>
+                <p class="description">Selecciona tu nombre para descubrir a quién le darás un regalo:</p>
+
+                <div class="select-group">
+                    <select id="memberSelect" class="member-select">
+                        <option value="">-- Selecciona tu nombre --</option>
+                    </select>
+                </div>
+
+                <button id="revealButton" class="btn btn-reveal" disabled>
+                    <span>🎉</span> Ver mi Asignación
+                </button>
+            </div>
+
+            <div class="section" id="assignmentSection" style="display: none;">
+                <div class="assignment-card">
+                    <div class="assignment-header">
+                        <span class="giver-name" id="giverName"></span>
+                        <span class="assignment-label">le dará un regalo a:</span>
+                    </div>
+                    <div class="assignment-reveal">
+                        <div class="receiver-name" id="receiverName"></div>
+                    </div>
+                    <div class="assignment-footer">
+                        <p>🤫 Recuerda mantenerlo en secreto</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="alreadyRevealedSection" style="display: none;">
+                <div class="warning-card">
+                    <h3>⚠️ Ya Viste tu Asignación</h3>
+                    <p>Ya revelaste tu asignación anteriormente. Solo puedes verla una vez para mantener el secreto.</p>
+                    <div class="past-assignment">
+                        <p><strong id="pastGiver"></strong> → <strong id="pastReceiver"></strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💝 Cada persona le dará un regalo a otra persona de la familia</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
