@@ -506,6 +506,18 @@ function seededRandom(seed) {
 
 // Inicializar la aplicación y generar asignaciones si no existen
 function initializeApp() {
+    // Detectar si el número de miembros cambió
+    const storedMembersCount = Object.keys(appData.assignments).length;
+    const currentMembersCount = HARDCODED_MEMBERS.length;
+
+    // Si cambió el número de miembros, regenerar asignaciones
+    if (storedMembersCount !== currentMembersCount && storedMembersCount > 0) {
+        console.log('Número de miembros cambió. Regenerando asignaciones...');
+        appData.assignments = {};
+        appData.revealed = [];
+        appData.isGenerated = false;
+    }
+
     // Si no hay asignaciones generadas, generarlas automáticamente
     if (!appData.isGenerated || Object.keys(appData.assignments).length === 0) {
         generateSecretAssignmentsAuto();
