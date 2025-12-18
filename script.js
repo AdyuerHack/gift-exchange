@@ -1,6 +1,14 @@
 // ===== ESTADO DE LA APLICACIÓN =====
+// Miembros hardcodeados
+const HARDCODED_MEMBERS = [
+    'El_adyuer',
+    'Motita_de_algodon',
+    'mirelis_maria',
+    'Johelis_la_durmiente'
+];
+
 let appData = {
-    members: [],
+    members: HARDCODED_MEMBERS,
     assignments: {},
     revealed: [],
     isGenerated: false,
@@ -76,6 +84,7 @@ revealButton.addEventListener('click', revealAssignment);
 
 // ===== INICIALIZACIÓN =====
 loadFromStorage();
+initializeApp();
 showLoginView();
 
 // ===== FUNCIONES DE AUTENTICACIÓN =====
@@ -89,13 +98,6 @@ function showAdminLogin() {
 function showMemberLogin() {
     adminPasswordSection.style.display = 'none';
     memberNameSection.style.display = 'block';
-
-    // Verificar que haya asignaciones generadas
-    if (!appData.isGenerated) {
-        showNotification('El administrador aún no ha generado las asignaciones', 'error');
-        memberNameSection.style.display = 'none';
-        return;
-    }
 
     // Poblar selector de miembros
     loginMemberSelect.innerHTML = '<option value="">-- Selecciona tu nombre --</option>';
@@ -450,15 +452,97 @@ function loadFromStorage() {
         const saved = localStorage.getItem('giftExchangeData');
         if (saved) {
             const loadedData = JSON.parse(saved);
-            // Asegurar que adminPassword existe
+            // Asegurar que adminPassword existe y siempre usar miembros hardcodeados
             appData = {
                 ...loadedData,
+                members: HARDCODED_MEMBERS, // Siempre usar miembros hardcodeados
                 adminPassword: loadedData.adminPassword || '150304'
             };
+        } else {
+            // Si no hay datos guardados, usar los valores por defecto
+            appData.members = HARDCODED_MEMBERS;
         }
     } catch (e) {
         console.error('Error al cargar de localStorage:', e);
         showNotification('Error al cargar datos guardados', 'error');
+    }
+}
+
+// Generador de números aleatorios con semilla (para asignaciones determinísticas)
+function seededRandom(seed) {
+    let state = seed;
+    return function () {
+        state = (state * 1103515245 + 12345) & 0x7fffffff;
+        return state / 0x7fffffff;
+    };
+}
+
+// Inicializar la aplicación y generar asignaciones si no existen
+function initializeApp() {
+    // Si no hay asignaciones generadas, generarlas automáticamente
+    if (!appData.isGenerated || Object.keys(appData.assignments).length === 0) {
+        generateSecretAssignmentsAuto();
+    }
+}
+
+// Generar asignaciones automáticamente (sin notificación)
+// Usa una semilla fija para que todos los dispositivos generen las mismas asignaciones
+function generateSecretAssignmentsAuto() {
+    if (appData.members.length < 2) {
+        return;
+    }
+
+    // Semilla fija para generar las mismas asignaciones en todos los dispositivos
+    // Cambiar esta semilla regenerará diferentes asignaciones
+    const SEED = 20251218; // Fecha: 2025-12-18
+    const random = seededRandom(SEED);
+
+    // Generar asignaciones
+    let attempts = 0;
+    const maxAttempts = 1000;
+    let validAssignments = null;
+
+    while (attempts < maxAttempts) {
+        const assignments = {};
+        const receivers = [...appData.members];
+        let valid = true;
+
+        for (let i = 0; i < appData.members.length; i++) {
+            const giver = appData.members[i];
+
+            // Filtrar receptores disponibles (no puede ser el mismo)
+            const availableReceivers = receivers.filter(r => r !== giver);
+
+            if (availableReceivers.length === 0) {
+                valid = false;
+                break;
+            }
+
+            // Seleccionar un receptor usando el generador con semilla
+            const randomIndex = Math.floor(random() * availableReceivers.length);
+            const receiver = availableReceivers[randomIndex];
+
+            assignments[giver] = receiver;
+
+            // Remover el receptor de la lista
+            const receiverIndex = receivers.indexOf(receiver);
+            receivers.splice(receiverIndex, 1);
+        }
+
+        if (valid) {
+            validAssignments = assignments;
+            break;
+        }
+
+        attempts++;
+    }
+
+    if (validAssignments) {
+        // Guardar asignaciones
+        appData.assignments = validAssignments;
+        appData.isGenerated = true;
+        // No resetear revealed, mantener el historial
+        saveToStorage();
     }
 }
 
