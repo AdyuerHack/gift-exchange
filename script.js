@@ -4,7 +4,8 @@ const HARDCODED_MEMBERS = [
     'El_adyuer',
     'Motita_de_algodon',
     'mirelis_maria',
-    'Johelis_la_durmiente'
+    'Johelis_la_durmiente',
+    'Johana_la_leona'
 ];
 
 let appData = {
