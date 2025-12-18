@@ -1,7 +1,7 @@
 // ===== ESTADO DE LA APLICACIÓN =====
 // Miembros hardcodeados
 const HARDCODED_MEMBERS = [
-    'El_adyuer',
+    'Adyuer_zapata',
     'Motita_de_algodon',
     'mirelis_maria',
     'Johelis_la_durmiente',
