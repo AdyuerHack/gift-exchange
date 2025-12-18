@@ -506,16 +506,21 @@ function seededRandom(seed) {
 
 // Inicializar la aplicación y generar asignaciones si no existen
 function initializeApp() {
-    // Detectar si el número de miembros cambió
-    const storedMembersCount = Object.keys(appData.assignments).length;
-    const currentMembersCount = HARDCODED_MEMBERS.length;
+    // Obtener miembros de las asignaciones guardadas
+    const storedMembers = Object.keys(appData.assignments).sort();
+    const currentMembers = [...HARDCODED_MEMBERS].sort();
 
-    // Si cambió el número de miembros, regenerar asignaciones
-    if (storedMembersCount !== currentMembersCount && storedMembersCount > 0) {
-        console.log('Número de miembros cambió. Regenerando asignaciones...');
+    // Verificar si los miembros han cambiado (cantidad o nombres)
+    const membersChanged = JSON.stringify(storedMembers) !== JSON.stringify(currentMembers);
+
+    // Si cambiaron los miembros y ya había asignaciones, regenerar
+    if (membersChanged && storedMembers.length > 0) {
+        console.log('Miembros cambiaron (nombres o cantidad). Regenerando asignaciones...');
         appData.assignments = {};
         appData.revealed = [];
         appData.isGenerated = false;
+        // Limpiar localStorage antiguo para evitar conflictos
+        localStorage.removeItem('giftExchangeData');
     }
 
     // Si no hay asignaciones generadas, generarlas automáticamente
