@@ -45,6 +45,10 @@ const revealStatus = document.getElementById('revealStatus');
 const passwordChangeSection = document.getElementById('passwordChangeSection');
 const newPasswordInput = document.getElementById('newPasswordInput');
 const changePasswordBtn = document.getElementById('changePasswordBtn');
+const viewAssignmentsBtn = document.getElementById('viewAssignmentsBtn');
+const hideAssignmentsBtn = document.getElementById('hideAssignmentsBtn');
+const assignmentsListSection = document.getElementById('assignmentsListSection');
+const assignmentsList = document.getElementById('assignmentsList');
 
 // Member View
 const memberView = document.getElementById('memberView');
@@ -77,6 +81,8 @@ memberInput.addEventListener('keypress', (e) => {
 generateButton.addEventListener('click', generateSecretAssignments);
 resetButton.addEventListener('click', resetAll);
 changePasswordBtn.addEventListener('click', changePassword);
+viewAssignmentsBtn.addEventListener('click', showAssignments);
+hideAssignmentsBtn.addEventListener('click', hideAssignments);
 
 // Member
 memberSelect.addEventListener('change', onMemberSelect);
@@ -384,6 +390,26 @@ function renderAdminView() {
             ` : ''}
         `;
     }
+}
+
+// ===== FUNCIONES DE VISUALIZACIÓN DE ASIGNACIONES =====
+function showAssignments() {
+    // Renderizar lista de asignaciones
+    assignmentsList.innerHTML = Object.entries(appData.assignments).map(([giver, receiver]) => `
+        <div class="assignment-item">
+            <span class="assignment-giver">${giver}</span>
+            <span class="assignment-arrow">→</span>
+            <span class="assignment-receiver">${receiver}</span>
+        </div>
+    `).join('');
+
+    assignmentsListSection.style.display = 'block';
+    viewAssignmentsBtn.style.display = 'none';
+}
+
+function hideAssignments() {
+    assignmentsListSection.style.display = 'none';
+    viewAssignmentsBtn.style.display = 'block';
 }
 
 // ===== FUNCIONES MIEMBRO (versión original, mantenida por compatibilidad) =====

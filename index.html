@@ -118,7 +118,20 @@
                     <p>Las asignaciones han sido creadas exitosamente. Ahora cada miembro puede entrar a la aplicación
                         para ver a quién le toca regalarle.</p>
                     <div id="revealStatus" class="reveal-status"></div>
-                    <button id="resetButton" class="btn btn-danger">
+
+                    <button id="viewAssignmentsBtn" class="btn btn-primary" style="margin-top: 20px;">
+                        <span>👁️</span> Ver Todas las Asignaciones
+                    </button>
+
+                    <div id="assignmentsListSection" style="display: none; margin-top: 20px;">
+                        <h4 style="color: #155724; margin-bottom: 15px;">🎁 Cruce de Asignaciones</h4>
+                        <div id="assignmentsList" class="assignments-list"></div>
+                        <button id="hideAssignmentsBtn" class="btn btn-secondary" style="margin-top: 15px;">
+                            <span>🙈</span> Ocultar Asignaciones
+                        </button>
+                    </div>
+
+                    <button id="resetButton" class="btn btn-danger" style="margin-top: 20px;">
                         <span>🔄</span> Reiniciar Todo
                     </button>
                 </div>
